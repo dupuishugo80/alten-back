@@ -1,76 +1,63 @@
-package com.testalten.backend.entity;
+package com.testalten.backend.dto;
 
-import java.time.Instant;
+import com.testalten.backend.entity.InventoryStatus;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-@Entity
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotNull
-    @Column(nullable = false)
+public class ProductRequestDTO {
+    @NotBlank(message = "Code cannot be empty")
     private String code;
 
-    @NotNull
-    @Column(nullable = false)
+    @NotBlank(message = "Name cannot be empty")
     private String name;
 
-    @Column(columnDefinition = "TEXT")
+    @NotBlank(message = "Description cannot be empty")
     private String description;
 
-    @NotNull
-    @Column(nullable = false)
     private String image;
 
-    @NotNull
-    @Column(nullable = false)
+    @NotBlank(message = "Category cannot be empty")
     private String category;
 
-    @NotNull
-    @Column(nullable = false)
+    @NotNull(message = "Price cannot be null")
+    @DecimalMin(value = "0.01", message = "Price must be greater than zero")
     private Double price;
 
-    @NotNull
-    @Column(nullable = false)
+    @NotNull(message = "Quantity cannot be null")
+    @Min(value = 0, message = "Quantity cannot be negative")
     private Integer quantity;
 
-    @NotNull
-    @Column(nullable = false)
+    @NotBlank(message = "Internal reference cannot be empty")
     private String internalReference;
 
-    @NotNull
-    @Column(nullable = false)
+    @NotNull(message = "Shell ID cannot be null")
     private Long shellId;
 
-    @NotNull
-    @Column(nullable = false)
+    @NotNull(message = "Inventory status cannot be null")
     private InventoryStatus inventoryStatus;
 
-    @Column
+    @DecimalMin(value = "0.0", inclusive = true, message = "Rating must be positive or zero")
     private Double rating;
 
-    @NotNull
-    @Column(nullable = false)
-    private Instant createdAt;
+    public ProductRequestDTO() {}
 
-    @NotNull
-    @Column(nullable = false)
-    private Instant updatedAt;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public ProductRequestDTO(String code, String name, String description, String image, String category,
+                             Double price, Integer quantity, String internalReference, Long shellId,
+                             InventoryStatus inventoryStatus, Double rating) {
+        this.code = code;
+        this.name = name;
+        this.description = description;
+        this.image = image;
+        this.category = category;
+        this.price = price;
+        this.quantity = quantity;
+        this.internalReference = internalReference;
+        this.shellId = shellId;
+        this.inventoryStatus = inventoryStatus;
+        this.rating = rating;
     }
 
     public String getCode() {
@@ -161,20 +148,5 @@ public class Product {
         this.rating = rating;
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
+    
 }
