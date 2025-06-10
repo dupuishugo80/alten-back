@@ -1,6 +1,6 @@
 package com.testalten.backend.entity;
 
-public enum inventoryStatus {
+public enum InventoryStatus {
     INSTOCK,
     LOWSTOCK,
     OUTOFSTOCK;
