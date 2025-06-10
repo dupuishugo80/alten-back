@@ -1,8 +1,9 @@
 package com.testalten.backend.service;
 
 import java.time.Instant;
-import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.testalten.backend.dto.ProductRequestDTO;
@@ -23,8 +24,8 @@ public class ProductService {
                 .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + id));
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     public Product createProduct(ProductRequestDTO productRequest) {
