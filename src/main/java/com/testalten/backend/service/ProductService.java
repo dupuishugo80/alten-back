@@ -1,6 +1,7 @@
 package com.testalten.backend.service;
 
 import java.time.Instant;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,15 @@ public class ProductService {
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
+    }
+
+    public Product getProductById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + id));
+    }
+
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 
     public Product createProduct(ProductRequestDTO productRequest) {

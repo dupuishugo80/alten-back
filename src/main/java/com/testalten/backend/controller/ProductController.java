@@ -9,6 +9,7 @@ import com.testalten.backend.service.ProductService;
 
 import jakarta.validation.Valid;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -30,13 +31,25 @@ public class ProductController {
     }
 
     @GetMapping()
-    public String getAllProducts() {
-        return "Liste des produits";
+    public ResponseEntity<?> getAllProducts() {
+        try {
+            List<Product> products = productService.getAllProducts();
+            return ResponseEntity.ok(products);
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<String> getProduct(@PathVariable("id") Long id) {
-        return ResponseEntity.ok("ID reçu : " + id);
+    public ResponseEntity<?> getProduct(@PathVariable("id") Long id) {
+        try {
+            Product product = productService.getProductById(id);
+            return ResponseEntity.ok(product);
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
+        }
     }
 
     @PostMapping()
