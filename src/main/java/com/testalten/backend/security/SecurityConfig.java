@@ -27,6 +27,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/token", "/account").permitAll()
                 .requestMatchers("/products/**").authenticated()
+                .requestMatchers("/cart/**").authenticated()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
