@@ -17,6 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -35,8 +37,16 @@ public class ProductController {
         this.productService = productService;
     }
 
+    private boolean isAdmin() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth != null && "admin@admin.com".equals(auth.getPrincipal());
+    }
+
     @PostMapping()
     public ResponseEntity<?> createProduct(@Valid @RequestBody ProductRequestDTO productRequest) {
+        if (!isAdmin()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Access denied"));
+        }
         try {
             Product createdProduct = productService.createProduct(productRequest);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
@@ -73,6 +83,9 @@ public class ProductController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> patchProduct(@PathVariable Long id, @RequestBody ProductPatchDTO patchDTO) {
+        if (!isAdmin()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Access denied"));
+        }
         try {
             Product updatedProduct = productService.patchProduct(id, patchDTO);
             return ResponseEntity.ok(updatedProduct);
@@ -85,6 +98,9 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable("id") Long id) {
+        if (!isAdmin()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Access denied"));
+        }
         try {
             productService.deleteProduct(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
